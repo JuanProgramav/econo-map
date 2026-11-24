@@ -36,4 +36,9 @@ export class RepositorioUsuariosPrisma implements RepositorioUsuarios {
     });
     return fila ? aEntidad(fila) : null;
   }
+
+  async buscarPorId(id: string): Promise<Usuario | null> {
+    const fila = await prisma.usuario.findUnique({ where: { id } });
+    return fila ? aEntidad(fila) : null;
+  }
 }

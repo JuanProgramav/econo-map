@@ -40,7 +40,12 @@ export class Albergue {
 
   actualizarOcupacion(personas: number, fecha: Date = new Date()): void {
     if (!Number.isInteger(personas) || personas < 0) {
-      throw new Error("La cantidad de personas no puede ser negativa.");
+      throw new Error("La cantidad de personas debe ser un número entero, sin negativos.");
+    }
+    if (personas > this.datos.capacidad.total) {
+      throw new Error(
+        `La cantidad no puede superar la capacidad del albergue (${this.datos.capacidad.total}).`,
+      );
     }
     this.datos = {
       ...this.datos,
