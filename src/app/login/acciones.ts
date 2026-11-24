@@ -1,9 +1,10 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cerrarSesion, crearSesion } from "@/lib/sesion";
+import { RepositorioSolicitudesPrisma } from "@/repositories/RepositorioSolicitudesPrisma";
 import { RepositorioUsuariosPrisma } from "@/repositories/RepositorioUsuariosPrisma";
 import { AutenticacionServicio } from "@/services/AutenticacionServicio";
-import { cerrarSesion, crearSesion } from "@/lib/sesion";
 
 export interface EstadoLogin {
   error: string | null;
@@ -23,12 +24,21 @@ export async function iniciarSesion(
     return { error: "Correo o contraseña incorrectos." };
   }
 
+  if (usuario.albergueId) {
+    const aprobado = await new RepositorioSolicitudesPrisma().estaAprobado(
+      usuario.albergueId,
+    );
+    if (!aprobado) {
+      return { error: "Tu albergue todavía está pendiente de aprobación." };
+    }
+  }
+
   await crearSesion({
     usuarioId: usuario.id,
     rol: usuario.rol,
     albergueId: usuario.albergueId,
   });
-  redirect("/panel");
+  redirect(usuario.puedeAprobarAlbergues() ? "/admin" : "/panel");
 }
 
 export async function salir(): Promise<void> {
