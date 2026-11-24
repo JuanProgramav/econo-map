@@ -20,12 +20,13 @@ model Albergue {
 }
 
 model Usuario {
-  id             String    @id @default(cuid())
-  correo         String    @unique
+  id             String       @id @default(cuid())
+  correo         String       @unique
   contrasenaHash String
   rol            String
   albergueId     String?
-  albergue       Albergue? @relation(fields: [albergueId], references: [id])
+  albergue       Albergue?    @relation(fields: [albergueId], references: [id])
+  afectaciones   Afectacion[]
 }
 
 model ReporteDiario {
@@ -34,4 +35,18 @@ model ReporteDiario {
   personas   Int
   fecha      DateTime @default(now())
   albergue   Albergue @relation(fields: [albergueId], references: [id])
+}
+
+model Afectacion {
+  id              String   @id @default(cuid())
+  usuarioId       String
+  tipo            String
+  descripcion     String
+  grupo           String
+  perdidaEstimada Int
+  estado          String   @default("pendiente")
+  estrategia      String?
+  apoyoAsignado   Int?
+  fecha           DateTime @default(now())
+  usuario         Usuario  @relation(fields: [usuarioId], references: [id])
 }

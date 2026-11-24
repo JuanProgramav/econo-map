@@ -16,4 +16,8 @@ export class AdministradorGeneral extends Usuario {
   puedeAprobarAlbergues(): boolean {
     return true;
   }
+
+  puedeGestionarAfectaciones(): boolean {
+    return true;
+  }
 }

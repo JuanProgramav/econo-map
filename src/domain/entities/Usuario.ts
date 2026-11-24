@@ -28,4 +28,12 @@ export abstract class Usuario {
   abstract puedeReportarOcupacionDe(albergueId: string): boolean;
 
   abstract puedeAprobarAlbergues(): boolean;
+
+  puedeRegistrarAfectaciones(): boolean {
+    return false;
+  }
+
+  puedeGestionarAfectaciones(): boolean {
+    return false;
+  }
 }
