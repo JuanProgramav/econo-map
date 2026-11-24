@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Albergue {
+  id                  String          @id @default(cuid())
+  nombre              String
+  direccion           String
+  capacidad           Int
+  ocupadas            Int             @default(0)
+  ultimaActualizacion DateTime        @default(now())
+  aprobado            Boolean         @default(false)
+  usuarios            Usuario[]
+  reportes            ReporteDiario[]
+}
+
+model Usuario {
+  id             String    @id @default(cuid())
+  correo         String    @unique
+  contrasenaHash String
+  rol            String
+  albergueId     String?
+  albergue       Albergue? @relation(fields: [albergueId], references: [id])
+}
+
+model ReporteDiario {
+  id         String   @id @default(cuid())
+  albergueId String
+  personas   Int
+  fecha      DateTime @default(now())
+  albergue   Albergue @relation(fields: [albergueId], references: [id])
+}
