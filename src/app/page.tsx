@@ -1,11 +1,11 @@
 import { TarjetaAlbergue } from "@/components/albergues/TarjetaAlbergue";
-import { RepositorioAlberguesEnMemoria } from "@/repositories/RepositorioAlberguesEnMemoria";
+import { RepositorioAlberguesPrisma } from "@/repositories/RepositorioAlberguesPrisma";
 import { AlberguesServicio } from "@/services/AlberguesServicio";
 
 export const dynamic = "force-dynamic";
 
 export default async function Inicio() {
-  const servicio = new AlberguesServicio(new RepositorioAlberguesEnMemoria());
+  const servicio = new AlberguesServicio(new RepositorioAlberguesPrisma());
   const albergues = await servicio.obtenerTodos();
 
   return (
