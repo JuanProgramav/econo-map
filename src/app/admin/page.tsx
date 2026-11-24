@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { salir } from "@/app/login/acciones";
 import { TarjetaSolicitud } from "@/components/admin/TarjetaSolicitud";
-import { leerSesion } from "@/lib/sesion";
+import { exigirAdministrador } from "@/lib/acceso";
 import { RepositorioSolicitudesPrisma } from "@/repositories/RepositorioSolicitudesPrisma";
 import { RepositorioUsuariosPrisma } from "@/repositories/RepositorioUsuariosPrisma";
 import { SolicitudesServicio } from "@/services/SolicitudesServicio";
@@ -10,19 +9,13 @@ import { SolicitudesServicio } from "@/services/SolicitudesServicio";
 export const dynamic = "force-dynamic";
 
 export default async function PanelAdministrador() {
-  const sesion = await leerSesion();
-  if (!sesion) redirect("/login");
-
-  const usuario = await new RepositorioUsuariosPrisma().buscarPorId(
-    sesion.usuarioId,
-  );
-  if (!usuario || !usuario.puedeAprobarAlbergues()) redirect("/panel");
+  const admin = await exigirAdministrador();
 
   const servicio = new SolicitudesServicio(
     new RepositorioSolicitudesPrisma(),
     new RepositorioUsuariosPrisma(),
   );
-  const pendientes = await servicio.listarPendientes(usuario);
+  const pendientes = await servicio.listarPendientes(admin);
 
   return (
     <main className="mx-auto w-full max-w-3xl px-6 py-10">

@@ -1,19 +1,17 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { salir } from "@/app/login/acciones";
 import { BarraOcupacion } from "@/components/albergues/BarraOcupacion";
 import { FormularioReporte } from "@/components/panel/FormularioReporte";
-import { leerSesion } from "@/lib/sesion";
+import { exigirUsuario } from "@/lib/acceso";
 import { RepositorioAlberguesPrisma } from "@/repositories/RepositorioAlberguesPrisma";
 
 export const dynamic = "force-dynamic";
 
 export default async function Panel() {
-  const sesion = await leerSesion();
-  if (!sesion) redirect("/login");
+  const usuario = await exigirUsuario();
 
-  const albergue = sesion.albergueId
-    ? await new RepositorioAlberguesPrisma().buscarPorId(sesion.albergueId)
+  const albergue = usuario.albergueId
+    ? await new RepositorioAlberguesPrisma().buscarPorId(usuario.albergueId)
     : null;
 
   return (
@@ -46,8 +44,7 @@ export default async function Panel() {
         </section>
       ) : (
         <p className="mt-6 text-muted">
-          Sesión iniciada como {sesion.rol}. Esta cuenta no tiene un albergue
-          asignado para reportar.
+          Esta cuenta no tiene un albergue asignado para reportar.
         </p>
       )}
 

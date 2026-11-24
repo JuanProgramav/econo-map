@@ -1,23 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { Usuario } from "@/domain/entities/Usuario";
-import { leerSesion } from "@/lib/sesion";
+import { exigirAdministrador } from "@/lib/acceso";
 import { RepositorioSolicitudesPrisma } from "@/repositories/RepositorioSolicitudesPrisma";
 import { RepositorioUsuariosPrisma } from "@/repositories/RepositorioUsuariosPrisma";
 import { SolicitudesServicio } from "@/services/SolicitudesServicio";
-
-async function obtenerAdministrador(): Promise<Usuario> {
-  const sesion = await leerSesion();
-  if (!sesion) redirect("/login");
-
-  const usuario = await new RepositorioUsuariosPrisma().buscarPorId(
-    sesion.usuarioId,
-  );
-  if (!usuario) redirect("/login");
-  return usuario;
-}
 
 function crearServicio(): SolicitudesServicio {
   return new SolicitudesServicio(
@@ -32,13 +19,13 @@ function refrescarPantallas(): void {
 }
 
 export async function aprobarSolicitud(formulario: FormData): Promise<void> {
-  const admin = await obtenerAdministrador();
+  const admin = await exigirAdministrador();
   await crearServicio().aprobar(admin, String(formulario.get("id")));
   refrescarPantallas();
 }
 
 export async function rechazarSolicitud(formulario: FormData): Promise<void> {
-  const admin = await obtenerAdministrador();
+  const admin = await exigirAdministrador();
   await crearServicio().rechazar(admin, String(formulario.get("id")));
   refrescarPantallas();
 }
