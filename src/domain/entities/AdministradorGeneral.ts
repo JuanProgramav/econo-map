@@ -5,6 +5,10 @@ export class AdministradorGeneral extends Usuario {
     return "administrador";
   }
 
+  get albergueId(): string | null {
+    return null;
+  }
+
   puedeReportarOcupacionDe(): boolean {
     return false;
   }

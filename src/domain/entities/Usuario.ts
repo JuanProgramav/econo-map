@@ -23,6 +23,8 @@ export abstract class Usuario {
 
   abstract get rol(): string;
 
+  abstract get albergueId(): string | null;
+
   abstract puedeReportarOcupacionDe(albergueId: string): boolean;
 
   abstract puedeAprobarAlbergues(): boolean;
