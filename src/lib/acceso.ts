@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { Usuario } from "@/domain/entities/Usuario";
+import { rutaInicialDe } from "@/lib/rutas";
 import { leerSesion } from "@/lib/sesion";
 import { RepositorioSolicitudesPrisma } from "@/repositories/RepositorioSolicitudesPrisma";
 import { RepositorioUsuariosPrisma } from "@/repositories/RepositorioUsuariosPrisma";
@@ -25,6 +26,20 @@ export async function exigirUsuario(): Promise<Usuario> {
 
 export async function exigirAdministrador(): Promise<Usuario> {
   const usuario = await exigirUsuario();
-  if (!usuario.puedeAprobarAlbergues()) redirect("/panel");
+  if (!usuario.puedeAprobarAlbergues()) redirect(rutaInicialDe(usuario.rol));
+  return usuario;
+}
+
+export async function exigirResponsable(): Promise<Usuario> {
+  const usuario = await exigirUsuario();
+  if (!usuario.albergueId) redirect(rutaInicialDe(usuario.rol));
+  return usuario;
+}
+
+export async function exigirCiudadano(): Promise<Usuario> {
+  const usuario = await exigirUsuario();
+  if (!usuario.puedeRegistrarAfectaciones()) {
+    redirect(rutaInicialDe(usuario.rol));
+  }
   return usuario;
 }

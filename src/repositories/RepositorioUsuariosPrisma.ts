@@ -1,4 +1,5 @@
 import { AdministradorGeneral } from "@/domain/entities/AdministradorGeneral";
+import { Ciudadano } from "@/domain/entities/Ciudadano";
 import { ResponsableAlbergue } from "@/domain/entities/ResponsableAlbergue";
 import { Usuario } from "@/domain/entities/Usuario";
 import { Correo } from "@/domain/value-objects/Correo";
@@ -23,6 +24,9 @@ function aEntidad(fila: FilaUsuario): Usuario {
   if (fila.rol === "administrador") {
     return new AdministradorGeneral(datos);
   }
+  if (fila.rol === "ciudadano") {
+    return new Ciudadano(datos);
+  }
   if (!fila.albergueId) {
     throw new Error("Un responsable debe tener un albergue asignado.");
   }
@@ -40,5 +44,14 @@ export class RepositorioUsuariosPrisma implements RepositorioUsuarios {
   async buscarPorId(id: string): Promise<Usuario | null> {
     const fila = await prisma.usuario.findUnique({ where: { id } });
     return fila ? aEntidad(fila) : null;
+  }
+
+  async registrarCiudadano(
+    correo: Correo,
+    contrasenaHash: string,
+  ): Promise<void> {
+    await prisma.usuario.create({
+      data: { correo: correo.texto, contrasenaHash, rol: "ciudadano" },
+    });
   }
 }

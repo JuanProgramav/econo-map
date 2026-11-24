@@ -1,13 +1,10 @@
-import bcrypt from "bcryptjs";
 import { SolicitudAlbergue } from "@/domain/entities/SolicitudAlbergue";
 import { Usuario } from "@/domain/entities/Usuario";
 import { Capacidad } from "@/domain/value-objects/Capacidad";
 import { Correo } from "@/domain/value-objects/Correo";
+import { cifrarContrasenaNueva } from "@/lib/contrasenas";
 import { RepositorioSolicitudes } from "@/repositories/RepositorioSolicitudes";
 import { RepositorioUsuarios } from "@/repositories/RepositorioUsuarios";
-
-const LARGO_MINIMO_CONTRASENA = 8;
-const VUELTAS_DE_CIFRADO = 10;
 
 export interface DatosRegistro {
   nombre: string;
@@ -29,11 +26,6 @@ export class SolicitudesServicio {
     if (nombre === "" || direccion === "") {
       throw new Error("El nombre y la dirección son obligatorios.");
     }
-    if (datos.contrasena.length < LARGO_MINIMO_CONTRASENA) {
-      throw new Error(
-        `La contraseña debe tener al menos ${LARGO_MINIMO_CONTRASENA} caracteres.`,
-      );
-    }
 
     const capacidad = Capacidad.crear(datos.capacidad);
     const correo = Correo.crear(datos.correo);
@@ -42,10 +34,7 @@ export class SolicitudesServicio {
       throw new Error("Ya existe una cuenta con ese correo.");
     }
 
-    const contrasenaHash = await bcrypt.hash(
-      datos.contrasena,
-      VUELTAS_DE_CIFRADO,
-    );
+    const contrasenaHash = await cifrarContrasenaNueva(datos.contrasena);
     await this.solicitudes.registrar({
       nombre,
       direccion,

@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { rutaInicialDe } from "@/lib/rutas";
 import { cerrarSesion, crearSesion } from "@/lib/sesion";
 import { RepositorioSolicitudesPrisma } from "@/repositories/RepositorioSolicitudesPrisma";
 import { RepositorioUsuariosPrisma } from "@/repositories/RepositorioUsuariosPrisma";
@@ -38,7 +39,7 @@ export async function iniciarSesion(
     rol: usuario.rol,
     albergueId: usuario.albergueId,
   });
-  redirect(usuario.puedeAprobarAlbergues() ? "/admin" : "/panel");
+  redirect(rutaInicialDe(usuario.rol));
 }
 
 export async function salir(): Promise<void> {
