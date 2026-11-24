@@ -1,0 +1,1 @@
+export type EstadoAlbergue = "disponible" | "atencion" | "critico";
