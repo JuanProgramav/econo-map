@@ -1,12 +1,14 @@
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/generated/prisma/client";
-
-const URL_BASE_DE_DATOS = process.env.DATABASE_URL ?? "file:./dev.db";
 
 const globalParaPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 function crearCliente(): PrismaClient {
-  const adaptador = new PrismaBetterSqlite3({ url: URL_BASE_DE_DATOS });
+  const direccion = process.env.DATABASE_URL;
+  if (!direccion) {
+    throw new Error("Falta DATABASE_URL en el archivo .env.");
+  }
+  const adaptador = new PrismaPg({ connectionString: direccion });
   return new PrismaClient({ adapter: adaptador });
 }
 
