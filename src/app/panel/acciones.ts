@@ -44,7 +44,7 @@ export async function reportarOcupacion(
     return { error: mensaje, mensaje: null };
   }
 
-  revalidatePath("/");
+  revalidatePath("/albergues");
   revalidatePath("/panel");
   return { error: null, mensaje: "Reporte guardado. Gracias por actualizar." };
 }

@@ -21,7 +21,7 @@ function crearServicioAfectaciones(): AfectacionesServicio {
 
 function refrescarPantallas(): void {
   revalidatePath("/admin");
-  revalidatePath("/");
+ revalidatePath("/albergues");
   revalidatePath("/afectaciones");
 }
 

@@ -17,7 +17,7 @@ export default async function PaginaAfectaciones() {
     <main className="mx-auto w-full max-w-3xl px-6 py-10">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-strong">Mi afectación</h1>
-        <Link href="/" className="text-sm text-muted hover:text-foreground">
+        <Link href="/albergues" className="text-sm text-muted hover:text-foreground">
           Ver albergues
         </Link>
       </div>
