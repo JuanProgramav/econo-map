@@ -50,3 +50,13 @@ model Afectacion {
   fecha           DateTime @default(now())
   usuario         Usuario  @relation(fields: [usuarioId], references: [id])
 }
+model OfertaEmpleo {
+  id               String   @id @default(cuid())
+  titulo           String
+  empresa          String
+  descripcion      String
+  cupos            Int
+  grupoPrioritario String
+  activa           Boolean  @default(true)
+  fecha            DateTime @default(now())
+}

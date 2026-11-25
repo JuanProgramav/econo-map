@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { FormularioLogin } from "@/components/login/FormularioLogin";
 import { rutaInicialDe } from "@/lib/rutas";
@@ -33,6 +34,13 @@ export async function PantallaIngreso() {
         className="mt-4 rounded-lg border border-border px-4 py-2 text-center text-foreground"
       >
         Ver albergues sin iniciar sesión
+      </Link>
+
+      <Link
+        href="/empleo"
+        className="mt-3 rounded-lg border border-border px-4 py-2 text-center text-foreground"
+      >
+        Ver ofertas de empleo
       </Link>
 
       <div className="mt-6 flex flex-col gap-2">

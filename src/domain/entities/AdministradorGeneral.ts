@@ -20,4 +20,8 @@ export class AdministradorGeneral extends Usuario {
   puedeGestionarAfectaciones(): boolean {
     return true;
   }
+
+  puedeGestionarEmpleo(): boolean {
+    return true;
+  }
 }

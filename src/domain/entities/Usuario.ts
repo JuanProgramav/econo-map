@@ -36,4 +36,8 @@ export abstract class Usuario {
   puedeGestionarAfectaciones(): boolean {
     return false;
   }
+
+  puedeGestionarEmpleo(): boolean {
+    return false;
+  }
 }
