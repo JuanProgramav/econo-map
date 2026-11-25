@@ -20,6 +20,7 @@ export interface RepositorioAfectaciones {
   registrar(datos: DatosNuevaAfectacion): Promise<void>;
   listarDeUsuario(usuarioId: string): Promise<Afectacion[]>;
   listarPendientes(): Promise<Afectacion[]>;
+  listarTodas(): Promise<Afectacion[]>;
   buscarPorId(id: string): Promise<Afectacion | null>;
   resolver(id: string, resolucion: ResolucionAfectacion): Promise<void>;
 }

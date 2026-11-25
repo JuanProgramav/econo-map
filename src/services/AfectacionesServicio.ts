@@ -52,13 +52,46 @@ export class AfectacionesServicio {
     return this.repositorio.listarPendientes();
   }
 
+  listarTodas(admin: Usuario): Promise<Afectacion[]> {
+    this.exigirGestion(admin);
+    return this.repositorio.listarTodas();
+  }
+
   async aprobar(
     admin: Usuario,
     afectacionId: string,
     claveEstrategia: string,
   ): Promise<void> {
     this.exigirGestion(admin);
-    const afectacion = await this.buscarPendiente(afectacionId);
+    const afectacion = await this.buscarConEstado(afectacionId, "pendiente");
+    await this.asignarEstrategia(afectacion, claveEstrategia);
+  }
+
+  async ajustarEstrategia(
+    admin: Usuario,
+    afectacionId: string,
+    claveEstrategia: string,
+  ): Promise<void> {
+    this.exigirGestion(admin);
+    const afectacion = await this.buscarConEstado(afectacionId, "aprobada");
+    await this.asignarEstrategia(afectacion, claveEstrategia);
+  }
+
+  async rechazar(admin: Usuario, afectacionId: string): Promise<void> {
+    this.exigirGestion(admin);
+    const afectacion = await this.buscarConEstado(afectacionId, "pendiente");
+
+    await this.repositorio.resolver(afectacion.id, {
+      estado: "rechazada",
+      estrategia: null,
+      apoyoAsignado: null,
+    });
+  }
+
+  private async asignarEstrategia(
+    afectacion: Afectacion,
+    claveEstrategia: string,
+  ): Promise<void> {
     const estrategia = obtenerEstrategia(claveEstrategia);
 
     await this.repositorio.resolver(afectacion.id, {
@@ -68,21 +101,13 @@ export class AfectacionesServicio {
     });
   }
 
-  async rechazar(admin: Usuario, afectacionId: string): Promise<void> {
-    this.exigirGestion(admin);
-    const afectacion = await this.buscarPendiente(afectacionId);
-
-    await this.repositorio.resolver(afectacion.id, {
-      estado: "rechazada",
-      estrategia: null,
-      apoyoAsignado: null,
-    });
-  }
-
-  private async buscarPendiente(id: string): Promise<Afectacion> {
+  private async buscarConEstado(
+    id: string,
+    estado: Afectacion["estado"],
+  ): Promise<Afectacion> {
     const afectacion = await this.repositorio.buscarPorId(id);
-    if (!afectacion || afectacion.estado !== "pendiente") {
-      throw new Error("La afectación no existe o ya fue revisada.");
+    if (!afectacion || afectacion.estado !== estado) {
+      throw new Error("La afectación no existe o no está en el estado esperado.");
     }
     return afectacion;
   }

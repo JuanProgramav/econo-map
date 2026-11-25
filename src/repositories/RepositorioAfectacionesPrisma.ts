@@ -61,6 +61,14 @@ export class RepositorioAfectacionesPrisma implements RepositorioAfectaciones {
     return filas.map(aEntidad);
   }
 
+  async listarTodas(): Promise<Afectacion[]> {
+    const filas = await prisma.afectacion.findMany({
+      include: INCLUIR_USUARIO,
+      orderBy: { fecha: "desc" },
+    });
+    return filas.map(aEntidad);
+  }
+
   async buscarPorId(id: string): Promise<Afectacion | null> {
     const fila = await prisma.afectacion.findUnique({
       where: { id },

@@ -11,6 +11,8 @@ import { SolicitudesServicio } from "@/services/SolicitudesServicio";
 
 export const dynamic = "force-dynamic";
 
+const ESTILO_ENLACE = "text-sm text-muted hover:text-foreground";
+
 export default async function PanelAdministrador() {
   const admin = await exigirAdministrador();
 
@@ -29,9 +31,14 @@ export default async function PanelAdministrador() {
     <main className="mx-auto w-full max-w-3xl px-6 py-10">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-strong">Panel del administrador</h1>
-        <Link href="/albergues" className="text-sm text-muted hover:text-foreground">
-          Ver lista pública
-        </Link>
+        <div className="flex gap-4">
+          <Link href="/evaluacion" className={ESTILO_ENLACE}>
+            Evaluación
+          </Link>
+          <Link href="/albergues" className={ESTILO_ENLACE}>
+            Ver lista pública
+          </Link>
+        </div>
       </div>
 
       <section className="mt-8 flex flex-col gap-4">
