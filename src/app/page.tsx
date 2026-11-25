@@ -1,4 +1,6 @@
 import { TarjetaAlbergue } from "@/components/albergues/TarjetaAlbergue";
+import { NavegacionPrincipal } from "@/components/ui/NavegacionPrincipal";
+import { leerSesion } from "@/lib/sesion";
 import { RepositorioAlberguesPrisma } from "@/repositories/RepositorioAlberguesPrisma";
 import { AlberguesServicio } from "@/services/AlberguesServicio";
 
@@ -7,6 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function Inicio() {
   const servicio = new AlberguesServicio(new RepositorioAlberguesPrisma());
   const albergues = await servicio.obtenerTodos();
+  const sesion = await leerSesion();
 
   return (
     <main className="mx-auto w-full max-w-5xl px-6 py-10">
@@ -15,10 +18,16 @@ export default async function Inicio() {
         Consulta los albergues disponibles y su ocupación.
       </p>
 
+      <NavegacionPrincipal rol={sesion?.rol ?? null} />
+
       <section className="mt-8 grid gap-4 sm:grid-cols-2">
-        {albergues.map((albergue) => (
-          <TarjetaAlbergue key={albergue.id} albergue={albergue} />
-        ))}
+        {albergues.length === 0 ? (
+          <p className="text-muted">Todavía no hay albergues registrados.</p>
+        ) : (
+          albergues.map((albergue) => (
+            <TarjetaAlbergue key={albergue.id} albergue={albergue} />
+          ))
+        )}
       </section>
     </main>
   );
