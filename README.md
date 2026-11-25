@@ -106,5 +106,5 @@ La app es un contenedor de Capacitor que abre la web publicada, por eso **necesi
 - [x] Reporte diario de ocupación
 - [x] Afectaciones económicas con estrategias de apoyo
 - [x] Web publicada y APK
-- [ ] Panel de evaluación y medición
-- [ ] Banco de empleo y emprendimiento
+- [x] Panel de evaluación y medición
+- [x] Banco de empleo y emprendimiento
